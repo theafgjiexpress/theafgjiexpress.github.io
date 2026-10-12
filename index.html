@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AFGJI Express</title>
+<meta name="description" content="Courageous we stand, because the truth involves us all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,800;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --text: #fff;
+    --body: #e6e6e6;
+    --muted: #9b9b9b;
+    --rule: #3a3a3a;
+    --red: #d62828;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --fraktur: "UnifrakturCook", "Old English Text MT", Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+  /* ---------- Page frame: sidebar | paper | equal empty space ---------- */
+  .page {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 840px) 1fr;
+    min-height: 100vh;
+  }
+
+  .side {
+    justify-self: end;
+    width: 100%;
+    max-width: 210px;
+    padding: 0 1.5rem;
+  }
+  .side nav {
+    position: sticky;
+    top: 2.5rem;
+    margin-top: 2.5rem;
+    border-top: 3px solid var(--red);
+    padding-top: 0.9rem;
+  }
+  .side h2 {
+    margin: 0 0 0.8rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .side ul { list-style: none; margin: 0; padding: 0; }
+  .side li { border-bottom: 1px solid var(--rule); }
+  .side a {
+    display: block;
+    padding: 0.55rem 0 0.55rem 0.7rem;
+    margin-left: -0.7rem;
+    border-left: 3px solid transparent;
+    font-size: 0.95rem;
+    color: var(--body);
+  }
+  .side a:hover { border-left-color: var(--red); color: var(--text); }
+
+  /* ---------- The paper ---------- */
+  .paper {
+    grid-column: 2;
+    padding: 2.5rem 2.75rem 3rem;
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+
+  /* Masthead */
+  .dateline {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .masthead { text-align: center; padding: 1.6rem 0 1.2rem; }
+  .masthead h1 {
+    margin: 0;
+    font-family: var(--fraktur);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 9vw, 5.6rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+  .masthead h1 span { color: var(--red); }
+  .tagline {
+    margin: 0.7rem 0 0;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--body);
+  }
+  .rule-double {
+    height: 7px;
+    border-top: 3px solid var(--red);
+    border-bottom: 1px solid var(--red);
+    margin-bottom: 2rem;
+  }
+
+  /* Sections */
+  section { scroll-margin-top: 1.5rem; padding-bottom: 2.2rem; margin-bottom: 2.2rem; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; margin-bottom: 0; }
+
+  .label {
+    display: inline-block;
+    margin: 0 0 0.9rem;
+    padding: 0.1rem 0.6rem;
+    background: var(--red);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+  .kicker { color: var(--red); font-weight: 600; font-size: 0.9rem; margin: 0 0 0.3rem; }
+
+  h2.headline, h3.headline {
+    margin: 0 0 0.6rem;
+    font-weight: 800;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  h2.headline { font-size: clamp(1.9rem, 4.4vw, 2.7rem); }
+  h3.headline { font-size: 1.4rem; }
+  .byline { margin: 0 0 1rem; font-size: 0.9rem; color: var(--muted); }
+  .byline b { color: var(--text); font-weight: 600; }
+  p { margin: 0 0 1rem; color: var(--body); }
+
+  .photo {
+    margin: 0 0 1.2rem;
+    border: 1px solid var(--rule);
+    background: #1a1a1a;
+    aspect-ratio: 16 / 8;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .photo.small { aspect-ratio: 16 / 10; }
+  .caption { margin: -0.7rem 0 1.2rem; font-size: 0.82rem; font-style: italic; color: var(--muted); }
+
+  .cols-2 { column-count: 2; column-gap: 2rem; column-rule: 1px solid var(--rule); text-align: justify; hyphens: auto; }
+  .cols-2 p:first-child::first-letter {
+    float: left;
+    font-size: 4rem;
+    line-height: 0.8;
+    padding: 0.35rem 0.5rem 0 0;
+    color: var(--red);
+    font-weight: 800;
+  }
+
+  .front-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+  .front-grid > aside { border-left: 1px solid var(--rule); padding-left: 1.5rem; }
+  .brief { padding-bottom: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--rule); }
+  .brief:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+
+  .pull {
+    margin: 1.4rem 0;
+    padding: 0.4rem 0 0.4rem 1.2rem;
+    border-left: 4px solid var(--red);
+    font-size: 1.35rem;
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--text);
+    break-inside: avoid;
+  }
+
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .trio article { padding: 0 1.4rem; border-left: 1px solid var(--rule); }
+  .trio article:first-child { padding-left: 0; border-left: 0; }
+  .trio article:last-child { padding-right: 0; }
+
+  .notice {
+    margin-top: 1.8rem;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid var(--red);
+  }
+  .notice h3 { margin: 0 0 0.4rem; font-size: 1.15rem; }
+  .notice p:last-child { margin-bottom: 0; }
+  .notice .mail { color: var(--red); font-weight: 800; }
+
+  .standards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
+  .standards h3 { margin: 0 0 0.4rem; font-size: 1.1rem; border-top: 3px solid var(--red); padding-top: 0.6rem; }
+  .standards p { font-size: 0.97rem; }
+
+  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 3px solid var(--red); text-align: center; font-size: 0.85rem; color: var(--muted); }
+  footer p { margin: 0.2rem 0; color: var(--muted); }
+
+  /* ---------- Smaller screens ---------- */
+  @media (max-width: 1180px) {
+    .page { display: block; }
+    .side { max-width: 840px; margin: 0 auto; padding: 1.5rem 1.5rem 0; }
+    .side nav { position: static; margin-top: 0; }
+    .side ul { display: flex; flex-wrap: wrap; gap: 0 1.4rem; }
+    .side li { border-bottom: 0; }
+    .side a { margin-left: 0; padding-left: 0; border-left: 0; border-bottom: 2px solid transparent; }
+    .side a:hover { border-bottom-color: var(--red); }
+    .paper { max-width: 840px; margin: 0 auto; border: 0; padding-top: 1.5rem; }
+  }
+  @media (max-width: 720px) {
+    .paper { padding: 1.5rem 1.2rem 2rem; }
+    .cols-2 { column-count: 1; }
+    .front-grid, .trio, .standards { grid-template-columns: 1fr; }
+    .front-grid > aside { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
+    .trio article, .trio article:first-child, .trio article:last-child { padding: 0 0 1.4rem; border-left: 0; border-bottom: 1px solid var(--rule); margin-bottom: 1.4rem; }
+    .trio article:last-child { border-bottom: 0; margin-bottom: 0; }
+    .dateline { flex-direction: column; gap: 0.1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <aside class="side">
+    <nav aria-label="Jump to a section">
+      <h2>In this issue</h2>
+      <ul>
+        <li><a href="#front-page">Front page</a></li>
+        <li><a href="#investigation">Investigation</a></li>
+        <li><a href="#opinions">Opinions</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#standards">Our standards</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="paper">
+
+    <div class="dateline">
+      <span>Volume 1, Issue 1</span>
+      <span>Monday, 12 October 2026</span>
+      <span>Free to read</span>
+    </div>
+
+    <header class="masthead">
+      <h1>The <span>AFGJI</span> Express</h1>
+      <p class="tagline">Courageous we stand, because the truth involves us all</p>
+    </header>
+    <div class="rule-double"></div>
+
+    <!-- FRONT PAGE -->
+    <section id="front-page">
+      <span class="label">Front page</span>
+      <div class="front-grid">
+        <article>
+          <p class="kicker">Lead story</p>
+          <h2 class="headline">Placeholder headline for the day’s most important story goes here</h2>
+          <p class="byline">By <b>Reporter Name</b>, Staff Writer</p>
+          <div class="photo" role="img" aria-label="Photo placeholder">Photo placeholder</div>
+          <p class="caption">Caption describing the photograph and crediting the photographer.</p>
+          <div class="cols-2">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <blockquote class="pull">“A pull quote from the story sits here to break up the text.”</blockquote>
+            <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.</p>
+            <p>Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.</p>
+          </div>
+        </article>
+
+        <aside>
+          <div class="brief">
+            <p class="kicker">News</p>
+            <h3 class="headline">A shorter story headline appears in this narrow column</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero sed cursus ante dapibus diam.</p>
+          </div>
+          <div class="brief">
+            <p class="kicker">News</p>
+            <h3 class="headline">Another brief headline for a second story</h3>
+            <p>Sed nisi nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum praesent mauris fusce nec tellus sed augue semper porta.</p>
+          </div>
+          <div class="brief">
+            <p class="kicker">In brief</p>
+            <p>Mauris massa vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- INVESTIGATION -->
+    <section id="investigation">
+      <span class="label">Investigation</span>
+      <p class="kicker">Special report</p>
+      <h2 class="headline">Placeholder headline for a long-form investigative piece</h2>
+      <p class="byline">By <b>Investigative Desk</b>, with research by the editorial team</p>
+      <div class="cols-2">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nulla facilisi. Etiam sit amet orci eget eros faucibus tincidunt.</p>
+        <p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero.</p>
+        <p>Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla.</p>
+        <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu.</p>
+      </div>
+    </section>
+
+    <!-- OPINIONS -->
+    <section id="opinions">
+      <span class="label">Opinions</span>
+      <div class="trio">
+        <article>
+          <p class="kicker">Guest column</p>
+          <h3 class="headline">Placeholder title of an opinion piece</h3>
+          <p class="byline"><b>Contributor Name</b></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.</p>
+        </article>
+        <article>
+          <p class="kicker">Editorial</p>
+          <h3 class="headline">Placeholder title of the editorial board’s view</h3>
+          <p class="byline"><b>The Editorial Board</b></p>
+          <p>Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie.</p>
+        </article>
+        <article>
+          <p class="kicker">Guest column</p>
+          <h3 class="headline">Placeholder title of another reader’s opinion</h3>
+          <p class="byline"><b>Contributor Name</b></p>
+          <p>Enim erat ultrices vitae, sagittis in, interdum eget, ligula. Donec eget tortor. Praesent in mauris eu tortor porttitor accumsan.</p>
+        </article>
+      </div>
+      <div class="notice">
+        <h3>Want to share your opinion?</h3>
+        <p>Anyone can write to us. Send your article to <span class="mail">editor@example.com</span> and our editors will review it. Opinions are the writers’ own, and every claim of fact is checked before publication.</p>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+      <span class="label">Features</span>
+      <div class="front-grid" style="grid-template-columns: 1fr 1fr;">
+        <article>
+          <div class="photo small" role="img" aria-label="Photo placeholder">Photo placeholder</div>
+          <p class="kicker">Culture</p>
+          <h3 class="headline">Placeholder headline for a feature story</h3>
+          <p>Nunc sed turpis. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Nulla porta dolor.</p>
+        </article>
+        <article>
+          <div class="photo small" role="img" aria-label="Photo placeholder">Photo placeholder</div>
+          <p class="kicker">Profile</p>
+          <h3 class="headline">Placeholder headline for a profile or interview</h3>
+          <p>Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- STANDARDS -->
+    <section id="standards">
+      <span class="label">Our standards</span>
+      <div class="standards">
+        <div>
+          <h3>We check before we publish</h3>
+          <p>Every claim of fact, in news and opinion alike, is verified against a reliable source before it goes live.</p>
+        </div>
+        <div>
+          <h3>We correct our mistakes</h3>
+          <p>When we get something wrong, we fix it openly and note the correction at the top of the article.</p>
+        </div>
+        <div>
+          <h3>We reject misinformation</h3>
+          <p>Submissions that spread false or misleading claims are declined, whoever sends them.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>The AFGJI Express</p>
+      <p>Courageous we stand, because the truth involves us all</p>
+      <p>&copy; 2026 The AFGJI Express. All rights reserved.</p>
+    </footer>
+
+  </main>
+
+</div>
+</body>
+</html>

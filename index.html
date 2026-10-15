@@ -196,7 +196,31 @@
   /* Opinions: single readable column */
   .opinion .text { max-width: 64ch; }
   .opinion .headline { font-style: italic; }
-
+  /*COMMENT DISCUSSION SECTION*/
+  .comments form { display: grid; gap: 0.7rem; margin-bottom: 2rem; }
+  .comments input[type="text"], .comments textarea {
+    width: 100%; padding: 0.7rem 0.8rem;
+    background: #0d0d0d; color: var(--text);
+    border: 1px solid var(--rule); border-radius: 0;
+    font: inherit; font-size: 1rem;
+  }
+  .comments input:focus, .comments textarea:focus { outline: 2px solid var(--red); outline-offset: 1px; }
+  .comments textarea { resize: vertical; }
+  .comments .hp { position: absolute; left: -9999px; }
+  .form-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  #comment-status { font-size: 0.85rem; color: var(--muted); }
+  #comment-status.error { color: var(--red); }
+  .comments button {
+    padding: 0.6rem 1.3rem; background: var(--red); color: var(--text);
+    border: 0; font: inherit; font-weight: 800; cursor: pointer;
+  }
+  .comments button:disabled { opacity: 0.5; cursor: wait; }
+  .comment { padding: 1rem 0; border-top: 1px solid var(--rule); }
+  .comment .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .comment .meta b { color: var(--text); font-weight: 600; }
+  .comment p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  #load-more { background: transparent; border: 1px solid var(--rule); color: var(--body); margin-top: 1rem; }
+  
   /* Write to us */
   .write { text-align: center; border-bottom: 0; margin-bottom: 0; padding: 2rem 1rem; border: 1px solid var(--red); }
   .write .headline { margin-bottom: 0.8rem; }
@@ -251,6 +275,7 @@
         <li><a href="#story-three">Third story</a></li>
         <li><a href="#opinion-one">First opinion</a></li>
         <li><a href="#opinion-two">Second opinion</a></li>
+        <li><a href="#discussion">Discussion</a></li>
         <li><a href="#write-to-us">Write to us</a></li>
       </ul>
     </nav>
@@ -327,7 +352,24 @@
         <p>Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula.</p>
       </div>
     </section>
-
+    <!-- COMMENTS -->
+    <section id="discussion" class="comments">
+      <span class="label outline">Discussion</span>
+      <h2 class="headline md">Join the conversation</h2>
+    
+      <form id="comment-form" novalidate>
+        <input type="text" name="author" placeholder="Your name" maxlength="40" required>
+        <textarea name="body" placeholder="Share your thoughts…" maxlength="1000" rows="4" required></textarea>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+        <div class="form-row">
+          <span id="comment-status" role="status" aria-live="polite"></span>
+          <button type="submit">Post comment</button>
+        </div>
+      </form>
+    
+      <div id="comment-list" aria-live="polite"></div>
+      <button id="load-more" type="button" hidden>Load older comments</button>
+    </section>
     <!-- WRITE TO US -->
     <section id="write-to-us" class="write">
       <span class="label">Write to us</span>
@@ -345,5 +387,73 @@
   </main>
 
 </div>
+<script>
+(() => {
+  const API = "https://afgji-comments-api.YOUR-SUBDOMAIN.workers.dev/comments";
+  const form = document.getElementById("comment-form");
+  const list = document.getElementById("comment-list");
+  const status = document.getElementById("comment-status");
+  const moreBtn = document.getElementById("load-more");
+  let oldestId = null;
+
+  function render(c, prepend) {
+    const el = document.createElement("div");
+    el.className = "comment";
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    const name = document.createElement("b");
+    name.textContent = c.author;               // textContent prevents XSS
+    const when = new Date(c.created_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+    meta.append(name, " · " + when);
+    const p = document.createElement("p");
+    p.textContent = c.body;
+    el.append(meta, p);
+    prepend ? list.prepend(el) : list.append(el);
+  }
+
+  async function load(before) {
+    try {
+      const res = await fetch(API + (before ? `?before=${before}` : ""));
+      const { comments } = await res.json();
+      comments.forEach(c => render(c, false));
+      if (comments.length) oldestId = comments[comments.length - 1].id;
+      moreBtn.hidden = comments.length < 50;
+      if (!before && !comments.length) list.textContent = "No comments yet. Be the first.";
+    } catch {
+      list.textContent = "Couldn't load comments right now.";
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector("button");
+    const data = Object.fromEntries(new FormData(form));
+    status.className = "";
+    status.textContent = "Posting…";
+    btn.disabled = true;
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json();
+      if (!res.ok) throw new Error(out.error || "Something went wrong.");
+      if (list.textContent.startsWith("No comments")) list.textContent = "";
+      if (out.comment) render(out.comment, true);
+      form.reset();
+      status.textContent = "Posted.";
+    } catch (err) {
+      status.className = "error";
+      status.textContent = err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  moreBtn.addEventListener("click", () => load(oldestId));
+  load();
+})();
+</script>
 </body>
 </html>

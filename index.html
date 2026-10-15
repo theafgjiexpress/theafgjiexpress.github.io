@@ -204,6 +204,8 @@
     border: 1px solid var(--rule); border-radius: 0;
     font: inherit; font-size: 1rem;
   }
+  .posting-as { font-size: 0.9rem; color: var(--muted); }
+  .posting-as b { color: var(--text); font-weight: 600; }
   .comments input:focus, .comments textarea:focus { outline: 2px solid var(--red); outline-offset: 1px; }
   .comments textarea { resize: vertical; }
   .comments .hp { position: absolute; left: -9999px; }
@@ -358,7 +360,7 @@
       <h2 class="headline md">Join the conversation</h2>
     
       <form id="comment-form" novalidate>
-        <input type="text" name="author" placeholder="Your name" maxlength="40" required>
+        <div id="posting-as" class="posting-as"></div>
         <textarea name="body" placeholder="Share your thoughts…" maxlength="1000" rows="4" required></textarea>
         <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
         <div class="form-row">
@@ -395,7 +397,32 @@
   const status = document.getElementById("comment-status");
   const moreBtn = document.getElementById("load-more");
   let oldestId = null;
-
+  let TOKEN = null;
+  function getToken() {
+    if (TOKEN) return TOKEN;
+    try { TOKEN = localStorage.getItem("afgji_token"); } catch {}
+    if (!TOKEN) {
+      TOKEN = crypto.randomUUID();
+      try { localStorage.setItem("afgji_token", TOKEN); } catch {}
+    }
+    return TOKEN;
+  }
+  // Must match the Worker's nameFromToken exactly
+  async function nameFromToken(token) {
+    const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+    const hex = [...new Uint8Array(hash).slice(0, 3)]
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+    return `Anonymous ${hex}`;
+  }
+  
+  const postingAs = document.getElementById("posting-as");
+  nameFromToken(getToken()).then(name => {
+    postingAs.textContent = "Posting as ";
+    const b = document.createElement("b");
+    b.textContent = name;
+    postingAs.append(b);
+  });
   function render(c, prepend) {
     const el = document.createElement("div");
     el.className = "comment";
@@ -428,6 +455,7 @@
     e.preventDefault();
     const btn = form.querySelector("button");
     const data = Object.fromEntries(new FormData(form));
+    data.token = getToken();
     status.className = "";
     status.textContent = "Posting…";
     btn.disabled = true;
